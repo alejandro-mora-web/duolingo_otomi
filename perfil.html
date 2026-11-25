@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Progreso de usuarios</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 32px 16px;
+            background: #f4f7fb;
+            color: #263445;
+            font-family: Arial, sans-serif;
+        }
+
+
+        h1 {
+            margin: 0 0 24px;
+            color: #263445;
+            text-align: center;
+        }
+
+
+        .boton-inicio {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: #0876bd;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+
+        .boton-inicio:hover {
+            background: #065d96;
+        }
+
+
+        .boton-inicio:focus-visible {
+            outline: 3px solid #263445;
+            outline-offset: 3px;
+        }
+
+
+        #contenedor {
+            width: min(100%, 720px);
+            margin: 0 auto;
+        }
+
+
+        .perfil-card {
+            padding: 28px;
+            background: #fff;
+            border: 1px solid #e5eaf0;
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(38, 52, 69, 0.08);
+        }
+
+
+        .foto-perfil-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+
+        .foto-perfil {
+            width: 112px;
+            height: 112px;
+            border: 4px solid #e6f4ff;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+
+        .perfil-card h2 {
+            margin: 0 0 18px;
+            color: #263445;
+            text-align: center;
+        }
+
+
+        .datos-perfil,
+        .detalles-progreso {
+            color: #526174;
+        }
+
+
+        .datos-perfil p,
+        .detalles-progreso p {
+            margin: 8px 0;
+            overflow-wrap: anywhere;
+        }
+
+
+        .titulo-progreso {
+            margin: 28px 0 14px;
+            color: #263445;
+            font-size: 18px;
+        }
+
+
+        .estadisticas {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+
+        .estadistica {
+            display: flex;
+            min-height: 120px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 16px 10px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+
+        .estadistica--porcentaje {
+            background: #e6f4ff;
+            color: #0876bd;
+        }
+
+
+        .estadistica--experiencia {
+            background: #f0eaff;
+            color: #7041bd;
+        }
+
+
+        .estadistica--racha {
+            background: #fff0df;
+            color: #c76a12;
+        }
+
+
+        .estadistica-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .estadistica-valor {
+            font-size: 30px;
+            line-height: 1.1;
+        }
+
+
+        .estadistica-detalle {
+            font-size: 13px;
+        }
+
+
+        .detalles-progreso {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #e5eaf0;
+        }
+
+
+        @media (max-width: 520px) {
+            .perfil-card {
+                padding: 20px 16px;
+            }
+
+
+            .estadisticas {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+
+            .estadistica {
+                min-height: 96px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<a class="boton-inicio" href="index.html">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 3 2.5 11h2.7v9h5.1v-5.8h3.4V20h5.1v-9h2.7L12 3z"/>
+    </svg>
+    <span>Volver al inicio</span>
+</a>
+
+
+<h1>Mi Perfil</h1>
+
+
+<div id="contenedor"></div>
+
+
+<script src="app.js"></script>
+<script>
+    // Agrega automáticamente los elementos visuales de la imagen sobre lo que genere app.js
+    const contenedor = document.getElementById('contenedor');
+    const observador = new MutationObserver(() => {
+        const banner = contenedor.querySelector('.foto-perfil-container');
+        if (banner && !banner.querySelector('.boton-editar-banner')) {
+            banner.insertAdjacentHTML('beforeend', `
+                <button type="button" class="boton-editar-banner" title="Editar perfil" aria-label="Editar perfil">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                    </svg>
+                </button>
+            `);
+        }
+
+        const datosPerfil = contenedor.querySelector('.datos-perfil');
+        if (datosPerfil && !datosPerfil.querySelector('.fila-social-banderas')) {
+            datosPerfil.insertAdjacentHTML('beforeend', `
+                <div class="fila-social-banderas">
+                    <div class="enlaces-seguidores">
+                        <span>Siguiendo a 2</span>
+                        <span>0 seguidores</span>
+                    </div>
+                    <div class="banderas-idiomas">
+                        <svg width="28" height="20" viewBox="0 0 28 20" style="border-radius:5px">
+                            <rect width="28" height="20" fill="#fff"/>
+                            <path d="M0 0h28v2.8H0zm0 5.7h28v2.8H0zm0 5.7h28v2.8H0zm0 5.8h28V20H0z" fill="#FF4B4B"/>
+                            <rect width="13" height="11.4" fill="#1CB0F6"/>
+                            <circle cx="3.5" cy="3" r="0.9" fill="#fff"/><circle cx="6.5" cy="3" r="0.9" fill="#fff"/><circle cx="9.5" cy="3" r="0.9" fill="#fff"/>
+                            <circle cx="5" cy="5.7" r="0.9" fill="#fff"/><circle cx="8" cy="5.7" r="0.9" fill="#fff"/>
+                            <circle cx="3.5" cy="8.4" r="0.9" fill="#fff"/><circle cx="6.5" cy="8.4" r="0.9" fill="#fff"/><circle cx="9.5" cy="8.4" r="0.9" fill="#fff"/>
+                        </svg>
+                        <svg width="28" height="20" viewBox="0 0 28 20" style="border-radius:5px">
+                            <rect width="9.33" height="20" x="0" fill="#58CC02"/>
+                            <rect width="9.33" height="20" x="9.33" fill="#ffffff"/>
+                            <rect width="9.34" height="20" x="18.66" fill="#FF4B4B"/>
+                        </svg>
+                    </div>
+                </div>
+            `);
+        }
+    });
+
+    observador.observe(contenedor, { childList: true, subtree: true });
+</script>
+</body>
+</html>
+
